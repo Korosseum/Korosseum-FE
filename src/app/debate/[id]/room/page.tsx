@@ -1,7 +1,6 @@
 "use client";
 
 import { DebateRoom } from "@/components/DebateRoom";
-import { Navigation } from "@/components/Navigation";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -76,7 +75,6 @@ export default function DebateRoomPage() {
   if (!debate || !side) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation currentPage="debate" showBackToLanding={false} />
         <div className="container mx-auto px-6 py-12 text-center">
           <h1 className="text-2xl font-bold text-muted-foreground">
             {!debate ? "토론을 찾을 수 없습니다" : "잘못된 접근입니다"}

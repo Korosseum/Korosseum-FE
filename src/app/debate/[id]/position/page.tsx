@@ -1,7 +1,6 @@
 "use client";
 
 import { PositionSelection } from "@/components/PositionSelection";
-import { Navigation } from "@/components/Navigation";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -73,7 +72,6 @@ export default function PositionPage() {
   if (!debate) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation currentPage="debate" />
         <div className="container mx-auto px-6 py-12 text-center">
           <h1 className="text-2xl font-bold text-muted-foreground">
             토론을 찾을 수 없습니다
@@ -88,7 +86,6 @@ export default function PositionPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation currentPage="debate" />
       <main className="debate-transition">
         <PositionSelection
           debateId={debateId}
