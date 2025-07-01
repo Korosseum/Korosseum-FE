@@ -40,3 +40,4 @@ google_client_secret.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+GEMINI.md
