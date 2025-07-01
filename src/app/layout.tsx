@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -55,10 +56,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={inter.variable}>
-      <body className={`${inter.className} antialiased rounded`}>
-        <Navigation />
-        {children}
-      </body>
+      <SessionProvider>
+        <body className={`${inter.className} antialiased rounded`}>
+          <Navigation />
+          {children}
+        </body>
+      </SessionProvider>
     </html>
   );
 }
