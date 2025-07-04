@@ -4,25 +4,23 @@ import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
 
 export default function SignIn() {
-  //   const credentialsAction = (formData: FormData) => {
-  //     signIn("credentials", {
-  //       email: formData.get("email"),
-  //       password: formData.get("password"),
-  //     });
-  //   };
+  const resendAction = (formData: FormData) => {
+    const email = formData.get("email");
+
+    signIn("nodemailer", { email });
+  };
 
   return (
     <>
-      {/* <form action={credentialsAction}>
-        <label className="flex gap-2 h-10 " htmlFor="credentials-email">
-          <span className="w-20">Email</span>
-          <input type="email" id="credentials-email" name="email" />
+      <form action={resendAction}>
+        <label htmlFor="email-resend">
+          Email
+          <input type="email" id="email-resend" name="email" />
         </label>
-        <label className="flex gap-2 h-10 " htmlFor="credentials-password">
-          <span className="w-20">Password</span>
-          <input type="password" id="credentials-password" name="password" />
-        </label>
-      </form> */}
+        <Button type="submit" value="Signin with email">
+          SignIn With Email
+        </Button>
+      </form>
       <Button onClick={() => signIn("google")} variant="outline">
         Signin with Google
       </Button>
