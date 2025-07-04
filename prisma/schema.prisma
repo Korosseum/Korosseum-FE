@@ -11,8 +11,11 @@ model User {
   id            String          @id @default(cuid())
   name          String?
   email         String          @unique
+  nickname      String?         @unique
+  nicknameIndex Int             @unique  @default(autoincrement())
   emailVerified DateTime?
   image         String?
+  role          String?         @default("user")
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
