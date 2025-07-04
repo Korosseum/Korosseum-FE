@@ -58,7 +58,6 @@ export default function RootLayout({
     <html lang="ko" className={inter.variable}>
       <SessionProvider>
         <body className={`${inter.className} antialiased rounded`}>
-          <Navigation />
           {children}
         </body>
       </SessionProvider>
