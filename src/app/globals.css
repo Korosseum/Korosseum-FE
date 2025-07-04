@@ -138,4 +138,9 @@
   .debate-transition {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  button,
+  a {
+    @apply cursor-pointer disabled:cursor-default;
+  }
 }
