@@ -6,25 +6,31 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(222.2 84% 4.9%);
+  --background: hsl(180, 9%, 98%);
+  --foreground: hsl(0, 0%, 25%);
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222.2 84% 4.9%);
+  --card-foreground: hsl(0, 0%, 25%);
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222.2 84% 4.9%);
-  --primary: hsl(222.2 47.4% 11.2%);
-  --primary-foreground: hsl(210 40% 98%);
-  --secondary: hsl(210 40% 96%);
-  --secondary-foreground: hsl(222.2 47.4% 11.2%);
-  --muted: hsl(210 40% 96%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
-  --accent: hsl(210 40% 96%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --popover-foreground: hsl(0, 0%, 25%);
+
+  /* 개선된 주요 색상들 - 채도 높임 */
+  --primary: hsl(215, 85%, 50%); /* 진한 블루 */
+  --primary-foreground: hsl(0, 0%, 100%); /* 순백색으로 대비 강화 */
+
+  --secondary: hsl(210, 40%, 85%); /* 채도 높인 라이트 그레이 */
+  --secondary-foreground: hsl(215, 35%, 20%); /* 더 진한 네이비 */
+
+  --muted: hsl(215, 25%, 88%); /* 채도 높인 블루 그레이 */
+  --muted-foreground: hsl(215, 20%, 35%); /* 더 진한 그레이 */
+
+  --accent: hsl(170, 85%, 35%); /* 진한 틸 그린 */
+  --accent-foreground: hsl(170, 10%, 95%); /* 밝은 배경색 */
+
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(210 40% 98%);
   --border: hsl(214.3 31.8% 91.4%);
   --input: hsl(214.3 31.8% 91.4%);
-  --ring: hsl(222.2 84% 4.9%);
+  --ring: hsl(215, 85%, 50%); /* primary와 동일하게 */
   --chart-1: hsl(12 76% 61%);
   --chart-2: hsl(173 58% 39%);
   --chart-3: hsl(197 37% 24%);
@@ -44,11 +50,11 @@
 }
 
 .dark {
-  --background: hsl(222.2 84% 4.9%);
+  --background: hsl(0, 0%, 25%);
   --foreground: hsl(210 40% 98%);
-  --card: hsl(222.2 84% 4.9%);
+  --card: hsl(0, 0%, 25%);
   --card-foreground: hsl(210 40% 98%);
-  --popover: hsl(222.2 84% 4.9%);
+  --popover: hsl(0, 0%, 25%);
   --popover-foreground: hsl(210 40% 98%);
   --primary: hsl(210 40% 98%);
   --primary-foreground: hsl(222.2 47.4% 11.2%);
@@ -103,13 +109,23 @@
   --color-side-b-dark: var(--side-b-dark);
   --color-neutral: var(--neutral);
   --color-neutral-dark: var(--neutral-dark);
+
+  --text-2xs: 0.625rem;
+
+  --color-side-1: #ff6b6b;
+  --color-side-2: #3b82f6;
+  --color-side-3: #f59e42;
+  --color-side-4: #10b981;
+  --color-side-5: #a259d9;
+  --color-side-6: #ffd600;
+  --color-side-7: #222222;
 }
 
 @layer utilities {
   * {
-    @apply border-border outline-ring/50;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      "Malgun Gothic", sans-serif;
+    @apply border-border outline-ring/50 text-foreground;
+    font-family: "Noto Sans", "Inter", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Malgun Gothic", sans-serif;
   }
 
   body {

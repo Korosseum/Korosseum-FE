@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/prisma";
 import { MailCheck, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

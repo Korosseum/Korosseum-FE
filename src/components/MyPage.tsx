@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   ArrowLeft,
   Trophy,
@@ -14,6 +14,7 @@ import {
   Award,
 } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface MyPageProps {
   onBack?: () => void;
@@ -55,6 +56,8 @@ interface SubmittedArgument {
 
 export function MyPage({ onBack }: MyPageProps) {
   const [activeTab, setActiveTab] = useState("overview");
+
+  const { data: session } = useSession();
 
   const userStats: UserStats = {
     totalDebates: 12,
@@ -144,7 +147,7 @@ export function MyPage({ onBack }: MyPageProps) {
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
-      <Link href="/home">
+      <Link href="/">
         <Button variant="ghost" className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           메인으로
@@ -157,12 +160,11 @@ export function MyPage({ onBack }: MyPageProps) {
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
-                <AvatarFallback className="text-lg bg-gradient-to-r from-red-500 to-blue-500 text-white">
-                  현
-                </AvatarFallback>
+                <AvatarImage src={session?.user.image} />
+                <AvatarFallback className="text-lg bg-gradient-to-r from-red-500 to-blue-500 text-white"></AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h1 className="text-2xl font-bold">현재유저</h1>
+                <h1 className="text-2xl font-bold">{session?.user.nickname}</h1>
                 <p className="text-muted-foreground">
                   {userStats.joinDate} 가입
                 </p>

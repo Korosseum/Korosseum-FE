@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/Navigation";
 import { SessionProvider } from "next-auth/react";
 
-const inter = Inter({
+const notoSans = Noto_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-notoSans",
   display: "swap",
 });
 
@@ -55,11 +55,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={inter.variable}>
+    <html lang="ko" className={`${notoSans.variable} `}>
       <SessionProvider>
-        <body className={`${inter.className} antialiased rounded`}>
-          {children}
-        </body>
+        <body className={`antialiased rounded`}>{children}</body>
       </SessionProvider>
     </html>
   );

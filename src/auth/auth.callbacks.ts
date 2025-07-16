@@ -54,26 +54,25 @@ export default {
 
       try {
         let tokenUrl: string | undefined;
-        let body: Record<string, string> | undefined;
+        // 기본 파라미터
+        let body: Record<string, string> = {
+          grant_type: "refresh_token",
+          refresh_token: token.refreshToken as string,
+        };
 
         // provider별로 토큰 갱신 endpoint/body 분기
         if (token.provider == "kakao") {
           // 카카오 토큰 갱신 endpoint 및 파라미터
           tokenUrl = "https://kauth.kakao.com/oauth/token";
-          body = {
-            grant_type: "refresh_token",
-            client_id: process.env.AUTH_KAKAO_ID!,
-            refresh_token: token.refreshToken as string,
-          };
+          body = { ...body, client_id: process.env.AUTH_KAKAO_ID! };
         }
         if (token.provider == "google") {
           // 구글 토큰 갱신 endpoint 및 파라미터
           tokenUrl = "https://oauth2.googleapis.com/token";
           body = {
+            ...body,
             client_id: process.env.AUTH_GOOGLE_ID!,
             client_secret: process.env.AUTH_GOOGLE_SECRET!,
-            grant_type: "refresh_token",
-            refresh_token: token.refreshToken as string,
           };
         }
         // todo: 네이버 토큰 갱신 추가
