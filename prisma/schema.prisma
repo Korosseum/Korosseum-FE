@@ -23,6 +23,10 @@ model User {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  debate_user debate_user[]
+  debate_like debate_like[]
+  opinion_like opinion_like[]
+  opinion Opinion[]
 }
  
 model Account {
@@ -79,3 +83,75 @@ model Authenticator {
  
   @@id([userId, credentialID])
 }
+
+
+
+// 토론 주제(방) 정보
+model Debate {
+  id             Int        @id @default(autoincrement()) // 토론 고유 ID
+  title          String     // 토론 제목
+  description    String     // 토론 설명
+  sideA          String?    // A의견(선택)
+  sideB          String?    // B의견(선택)
+  sideC          String?    // C의견(선택)
+  sideD          String?    // D의견(선택)
+  sideE          String?    // E의견(선택)
+  sideF          String?    // F의견(선택)
+  sideG          String?    // G의견(선택)
+  totalCounts    Int        @default(0) // 총 참여자 수
+  totalArguments Int        @default(0) // 총 의견 수
+  isActive       Boolean    // 활성화 여부
+  createdAt      DateTime   @default(now()) // 생성일
+  updatedAt      DateTime   @updatedAt @default(now()) // 수정일
+  category       String     // 카테고리
+  opinions       Opinion[]  // 토론에 달린 의견(댓글)
+  debate_user    debate_user[] // 토론 참가자 목록(다대다)
+  debate_like   debate_like[] // 토론 좋아요 목록(다대다)
+}
+
+model debate_like {
+  debateId Int
+  userId String
+  debate Debate @relation(fields: [debateId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([debateId, userId])
+}
+
+// 토론 참가자 중간 테이블(다대다 관계, 역할 포함)
+model debate_user {
+  debateId   Int      // 토론 ID
+  userId     String   // 유저 ID
+  debate     Debate   @relation(fields: [debateId], references: [id], onDelete: Cascade) // 토론과 연결
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade) // 유저와 연결
+  role       String   @default("guest") // 참가자 역할(guest, host 등)
+  createdAt  DateTime @default(now()) // 생성일
+  updatedAt  DateTime @updatedAt // 수정일
+
+  @@id([debateId, userId]) // 복합 기본키
+}
+
+// 토론 의견(댓글)
+model Opinion {
+  id        Int      @id @default(autoincrement()) // 의견 고유 ID
+  content   String   // 의견 내용
+  likes     Int      @default(0) // 좋아요 수
+  updatedAt DateTime @updatedAt // 수정일
+  createdAt DateTime @default(now()) // 생성일
+  userId    String   // 작성자 ID
+  debateId  Int      // 토론 ID
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // 작성자와 연결
+  debate    Debate   @relation(fields: [debateId], references: [id], onDelete: Cascade) // 토론과 연결
+  opinion_like opinion_like[] // 의견 좋아요 목록(다대다)
+}
+
+model opinion_like {
+  opinionId Int
+  userId String
+  opinion Opinion @relation(fields: [opinionId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([opinionId, userId])
+}
+

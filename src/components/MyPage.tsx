@@ -160,7 +160,7 @@ export function MyPage({ onBack }: MyPageProps) {
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
-                <AvatarImage src={session?.user.image} />
+                <AvatarImage src={session?.user.image ?? ""} />
                 <AvatarFallback className="text-lg bg-gradient-to-r from-red-500 to-blue-500 text-white"></AvatarFallback>
               </Avatar>
               <div className="flex-1">

@@ -5,6 +5,7 @@ import { Badge } from "./ui/badge";
 import { Card } from "./ui/card";
 import { getBgColor } from "@/lib/utils";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface HomePageProps {
   onJoinDebate?: (debateId: string) => void;
@@ -14,7 +15,16 @@ interface HomePageProps {
 const debateData = {
   "1": {
     id: "1",
+    author: "gptjd1997",
     title: "근본 중국집 음식은?",
+    content: `근데 솔직히 짜장면은 잼민이들이 먹는거 아님? 근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+근데 솔직히 짜장면은 잼민이들이 먹는거 아님?
+`,
     sideA: "짜장면",
     sideB: "짬뽕",
     totalCounts: 250,
@@ -22,6 +32,7 @@ const debateData = {
     isActive: true,
     createdAt: "2시간 전",
     category: "Food",
+    thumbnail: "https://picsum.photos/seed/1752939703290/450/450",
     opinions: [
       {
         id: "1",
@@ -50,83 +61,77 @@ const debateData = {
 export function HomePage({ onJoinDebate }: HomePageProps) {
   return (
     <div>
-      <div>
-        <div className="grid grid-cols-3 p-4 will-change-auto">
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-              boxShadow: "0 3px 10px 3px hsl(255, 0%, 100%)",
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            whileHover={{
-              boxShadow: "0 3px 10px 3px hsl(255, 0%, 93%)",
-
-              scale: 1.01,
-              transition: {
-                duration: 0.2,
-              },
-            }}
-            transition={{
-              scale: { duration: 0.2 },
-              boxShadow: { duration: 0.2 },
-            }}
-            className="rounded-xl will-change-auto"
-          >
-            <Card className="h-48 p-3 gap-3 font-openSans ">
-              <div className="flex justify-between">
-                <Badge variant="destructive" className="category text-2xs">
-                  {debateData["1"].category}
-                </Badge>
-                <div className="popular text-destructive font-semibold flex items-center gap-1">
-                  <Users2 className="w-3 h-3" />
-                  <span className="text-2xs">
-                    {debateData["1"].totalCounts}
-                  </span>
-                </div>
+      <div className="my-5 max-w-3xl">
+        <Card className=" p-3 font-openSans duration-100 bg-background border-none hover:bg-muted/20">
+          <div className="flex justify-between ">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold rounded-full bg-accent w-8 h-8 flex items-center justify-center text-background">
+                {debateData["1"].category.toUpperCase()[0]}
+              </h2>
+              <div className="flex flex-col">
+                <span className="text-2xs text-foreground/70">
+                  Food · {debateData["1"].createdAt}
+                </span>
+                <h2 className="flex items-center gap-2 text-xs font-semibold text-foreground/70">
+                  {debateData["1"].author}
+                </h2>
               </div>
+            </div>
+            <div className="popular font-semibold flex  items-center gap-1">
+              <Users2 color="grey" className="w-3.5 h-3.5" strokeWidth={2.5} />
+              <span className="text-xs text-gray-500">
+                {debateData["1"].totalCounts}
+              </span>
+            </div>
+          </div>
 
-              <div className="flex flex-col justify-between px-3 h-full">
-                <div className="flex justify-between">
-                  <h2 className="text-lg font-bold">{debateData["1"].title}</h2>
-                </div>
-
-                <div className="flex flex-col">
-                  <div className="flex flex-col gap-2 bg-muted p-0.5 rounded-full">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 0.7, ease: "easeInOut" }}
-                    >
-                      <div className="flex h-1.5 rounded-full overflow-hidden ">
-                        {debateData["1"].opinions.map((opinion, index) => (
-                          <div
-                            key={opinion.id}
-                            className={`${getBgColor(index)} h-full`}
-                            style={{
-                              width: `${
-                                (opinion.count / debateData["1"].totalCounts) *
-                                100
-                              }%`,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </motion.div>
+          <div className="flex flex-col min-h-36 px-1.5 h-full gap-2">
+            <h2 className="text-xl font-bold">{debateData["1"].title}</h2>
+            <div className="flex justify-center bg-muted/50 rounded-xl border border-foreground/10">
+              <Image
+                src={debateData["1"].thumbnail}
+                alt={debateData["1"].title}
+                width={450}
+                height={450}
+                className="object-cover"
+              />
+            </div>
+            <div>{debateData["1"].content}</div>
+          </div>
+          <div className="flex flex-col justify-between px-3 ">
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col gap-2 w-1/2">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 0.7, ease: "easeInOut" }}
+                >
+                  <div className="flex overflow-hidden gap-1">
+                    {debateData["1"].opinions.map((opinion, index) => (
+                      <div
+                        key={opinion.id}
+                        className={`opacity-50 hover:opacity-100 ${getBgColor(
+                          index
+                        )} transition-opacity duration-150 w-6 h-6 rounded-full`}
+                        // style={{
+                        //   width: `${
+                        //     (opinion.count / debateData["1"].totalCounts) *
+                        //     100
+                        //   }%`,
+                        // }}
+                      />
+                    ))}
                   </div>
-                  <div className="flex justify-end my-2">
-                    <button className="text-xs py-1 bg-primary text-white font-semibold rounded-md px-3">
-                      Join
-                    </button>
-                  </div>
-                </div>
+                </motion.div>
               </div>
-            </Card>
-          </motion.div>
-        </div>
+              <div className="flex justify-end my-2">
+                <button className="text-sm py-1 bg-primary text-white font-bold rounded-md px-3">
+                  Join
+                </button>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
     </div>
   );

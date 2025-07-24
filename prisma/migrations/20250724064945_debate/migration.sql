@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Debate" ALTER COLUMN "sideA" DROP NOT NULL,
+ALTER COLUMN "sideB" DROP NOT NULL;

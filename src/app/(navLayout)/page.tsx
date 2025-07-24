@@ -3,7 +3,7 @@
 import { HomePage } from "@/components/HomePage";
 export default function HomePageRoute() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <main className="debate-transition">
         <HomePage />
       </main>

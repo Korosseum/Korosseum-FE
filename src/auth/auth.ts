@@ -11,11 +11,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google({
       profile(profile) {
         console.log("🔥profile", profile);
-        return {
+        const newProfile = {
           role: profile.role ?? "user",
-          id: profile.id || profile.sub, // provider별 고유 id 이거 없으면 id 인식 못함
-          ...profile,
+          id: profile.id || profile.sub, // provider별 고유 id (sub를 id로 db에 맞게 변경),
+
+          email: profile.email,
+          name: profile.name,
+          image: profile.picture,
         };
+        console.log("🔥newProfile", newProfile);
+        return newProfile;
       },
       authorization: {
         params: {

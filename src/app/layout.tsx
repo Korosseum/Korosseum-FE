@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/Navigation";
+import "@/components/plugins/Toolbar.css";
+
 import { SessionProvider } from "next-auth/react";
 
 const notoSans = Noto_Sans({
@@ -56,8 +57,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${notoSans.variable} `}>
+      <head></head>
       <SessionProvider>
-        <body className={`antialiased rounded`}>{children}</body>
+        <body className={`antialiased rounded h-dvh`}>{children}</body>
       </SessionProvider>
     </html>
   );
