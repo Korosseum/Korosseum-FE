@@ -1,11 +1,11 @@
 import type { NextAuthConfig } from "next-auth";
+import { cookies } from "next/headers";
 
 export default {
   // JWT 콜백: access_token/refresh_token 관리, 닉네임 처리, provider별 토큰 갱신 등 핵심 인증 로직
   async jwt({ token, user, account, profile }) {
     // 1. user 객체가 있으면(첫 로그인 또는 재로그인)
     if (user) {
-      console.log("🔥user", user);
       if (user.role) token.role = user.role;
       if (user.nickname) {
         // 1-1. DB에 닉네임이 있으면 토큰에 닉네임 저장(재로그인)
@@ -32,7 +32,7 @@ export default {
     }
 
     // 디버깅용 로그(토큰/계정 정보)
-    // console.log("🔥token", token);
+    (await cookies()).set("user_session", token.sub as string);
     // console.log("🔥account", account);
 
     // 2. account 객체가 있으면(로그인 직후, provider 인증 성공)
@@ -107,6 +107,7 @@ export default {
           };
         }
       } catch (error) {
+        console.log("🔥error");
         // 토큰 갱신 실패 시 에러 로그 및 세션에 에러 플래그 저장
         console.error("Error refreshing access_token", error);
         token.error = "RefreshTokenError";
@@ -120,9 +121,13 @@ export default {
   // 세션 콜백: 클라이언트에서 사용할 세션 객체 커스텀(닉네임 등 추가)
   async session({ session, user, token }) {
     // 토큰에 닉네임이 있으면 세션에 복사(클라이언트에서 사용 가능)
-    console.log("token", token);
     if (token.role) session.user.role = token.role as string;
     if (token.nickname) session.user.nickname = token.nickname as string;
+
+    // JWT 토큰을 세션에 추가 (NestJS 서버 통신용)
+    if (token.access_token) {
+      session.jwtToken = token.access_token as string;
+    }
 
     // 토큰에 에러 플래그가 있으면 세션에도 복사(에러 핸들링용)
     session.error = token.error as string;

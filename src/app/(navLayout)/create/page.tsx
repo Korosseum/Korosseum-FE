@@ -1,13 +1,16 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getSession, useSession } from "next-auth/react";
 import TextEditor from "@/components/TextEditor";
+
+import { decode } from "next-auth/jwt";
 
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { getToken } from "next-auth/jwt";
 
 export default function CreatePost() {
   const [isFocused, setIsFocused] = useState(false);
@@ -20,19 +23,39 @@ export default function CreatePost() {
   const session = useSession();
 
   const handleSubmit = async (formData: FormData) => {
-    console.log(formData.get("title"));
-    console.log(formData.get("customCategory"));
-    console.log(formData.get("category"));
-    console.log(formData.get("content"));
-  };
+    const title = formData.get("title");
+    // const customCategory = formData.get("customCategory");
+    const category = formData.get("category");
+    const content = formData.get("content");
 
-  const [contentValue, setContentValue] = useState("");
+    const body = {
+      title,
+      category,
+      content,
+    };
+
+    const response = await fetch("http://localhost:4000/post", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(body),
+      headers: {
+        origin: "http://localhost:3000",
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
 
   const handleChange = (e: any) => {
     const value = e.target.value;
-    setContent((prev) => (prev != value ? value : prev));
-    parseMarkDown(value);
+    setContent(value);
   };
+
+  useEffect(() => {
+    parseMarkDown(content);
+  }, [content]);
 
   const parseMarkDown = async (markdown: string) => {
     const result = await unified()
@@ -103,21 +126,23 @@ export default function CreatePost() {
             <sup className="text-red-700 text-xs">*</sup>
           </motion.span>
         </div>
-        <TextEditor onChange={handleChange} name="content" />
+        <TextEditor onChange={handleChange} name="content" value={content} />
 
-        <button
-          className="self-end bg-primary text-primary-foreground rounded-xl px-4 py-2 mr-2"
-          type="submit"
-        >
-          마크다운 미리보기
-        </button>
+        <div className="flex gap-2 self-end">
+          <button
+            className="bg-foreground text-background rounded-xl px-4 py-2 "
+            type="submit"
+          >
+            미리보기
+          </button>
 
-        <button
-          className="self-end bg-primary text-primary-foreground rounded-xl px-4 py-2 mr-2"
-          type="submit"
-        >
-          작성하기
-        </button>
+          <button
+            className="bg-primary text-background rounded-xl px-4 py-2 "
+            type="submit"
+          >
+            작성하기
+          </button>
+        </div>
 
         {preview ? (
           <div

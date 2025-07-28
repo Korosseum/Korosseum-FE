@@ -13,6 +13,7 @@ declare module "next-auth" {
 
   interface Session {
     error?: string;
+    jwtToken?: string; // JWT 토큰 자체를 세션에 추가
     user: {
       role?: string;
       nickname?: string;

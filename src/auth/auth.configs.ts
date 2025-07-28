@@ -22,6 +22,7 @@ export default {
   session: {
     strategy: "jwt",
   },
+
   debug: false,
   secret: process.env.AUTH_SECRET,
   callbacks,
