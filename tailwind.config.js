@@ -21,6 +21,9 @@ module.exports = {
       fontSize: {
         "2xs": "0.625rem",
       },
+      gridTemplateRows: {
+        sm: "40px 1fr 40px",
+      },
     },
   },
   plugins: [],

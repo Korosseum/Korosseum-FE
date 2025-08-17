@@ -1,16 +1,14 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { getSession, useSession } from "next-auth/react";
 import TextEditor from "@/components/TextEditor";
-
-import { decode } from "next-auth/jwt";
 
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
-import { getToken } from "next-auth/jwt";
+import useAuth from "@/hooks/useAuth";
+import apiCall from "@/lib/apiCall";
 
 export default function CreatePost() {
   const [isFocused, setIsFocused] = useState(false);
@@ -20,7 +18,9 @@ export default function CreatePost() {
 
   const [preview, setPreview] = useState<any>();
 
-  const session = useSession();
+  const { user } = useAuth();
+
+  console.log("🔥user", user);
 
   const handleSubmit = async (formData: FormData) => {
     const title = formData.get("title");
@@ -34,17 +34,10 @@ export default function CreatePost() {
       content,
     };
 
-    const response = await fetch("http://localhost:4000/post", {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify(body),
-      headers: {
-        origin: "http://localhost:3000",
-        "Content-Type": "application/json",
-      },
+    const data = await apiCall.post("/post", {
+      body,
     });
 
-    const data = await response.json();
     console.log(data);
   };
 
@@ -68,8 +61,6 @@ export default function CreatePost() {
 
     console.log(preview);
   };
-
-  const user = session.data?.user;
 
   return (
     <div className="flex flex-col gap-6 px-14 py-8 w-full max-w-3xl">

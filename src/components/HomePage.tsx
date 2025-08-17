@@ -61,42 +61,40 @@ const debateData = {
 export function HomePage({ onJoinDebate }: HomePageProps) {
   return (
     <div>
-      <div className="my-5 max-w-3xl">
-        <Card className=" p-3 font-openSans duration-100 bg-background border-none hover:bg-muted/20">
-          <div className="flex justify-between ">
+      <div className="max-w-3xl mt-3">
+        <Card className="gap-1 font-openSans duration-100 bg-background border-none hover:bg-muted/20">
+          <div className="flex justify-between px-1.5 py-1">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold rounded-full bg-accent w-8 h-8 flex items-center justify-center text-background">
+              <h2 className="text-sm font-semibold rounded-full bg-accent w-6 h-6 flex items-center justify-center text-background">
                 {debateData["1"].category.toUpperCase()[0]}
               </h2>
-              <div className="flex flex-col">
-                <span className="text-2xs text-foreground/70">
-                  Food · {debateData["1"].createdAt}
-                </span>
-                <h2 className="flex items-center gap-2 text-xs font-semibold text-foreground/70">
-                  {debateData["1"].author}
-                </h2>
-              </div>
+
+              <h2 className="flex items-center gap-2 text-xs font-semibold text-foreground/70">
+                {debateData["1"].author}
+              </h2>
+              <span className="text-2xs text-foreground/70">
+                @Food · {debateData["1"].createdAt}
+              </span>
             </div>
-            <div className="popular font-semibold flex  items-center gap-1">
+            {/* <div className="popular font-semibold flex  items-center gap-1">
               <Users2 color="grey" className="w-3.5 h-3.5" strokeWidth={2.5} />
               <span className="text-xs text-gray-500">
                 {debateData["1"].totalCounts}
               </span>
-            </div>
+            </div> */}
           </div>
 
-          <div className="flex flex-col min-h-36 px-1.5 h-full gap-2">
-            <h2 className="text-xl font-bold">{debateData["1"].title}</h2>
+          <div className="flex flex-col min-h-36 h-full ">
             <div className="flex justify-center bg-muted/50 rounded-xl border border-foreground/10">
               <Image
-                src={debateData["1"].thumbnail}
+                src="/feedSampleImage.jpg"
                 alt={debateData["1"].title}
-                width={450}
-                height={450}
+                width={550}
+                height={550}
                 className="object-cover"
               />
             </div>
-            <div>{debateData["1"].content}</div>
+            <div className="text-xs p-2">{debateData["1"].content}</div>
           </div>
           <div className="flex flex-col justify-between px-3 ">
             <div className="flex justify-between items-center">

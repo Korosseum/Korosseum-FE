@@ -17,7 +17,3 @@ export const getBgColor = (index: number) => {
   ];
   return colors[index];
 };
-
-export const parseMarkdown = (markdown: string) => {
-  console.log(unified);
-};

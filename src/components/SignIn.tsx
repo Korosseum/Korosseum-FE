@@ -1,13 +1,17 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
 
 export default function SignIn() {
   const resendAction = (formData: FormData) => {
     const email = formData.get("email");
 
-    signIn("nodemailer", { email });
+    // signIn("nodemailer", { email });
+  };
+
+  const socialSignIn = (provider: string) => {
+    window.open(`http://localhost:4000/auth/${provider}`, "_blank");
   };
 
   return (
@@ -21,10 +25,10 @@ export default function SignIn() {
           SignIn With Email
         </Button>
       </form>
-      <Button onClick={() => signIn("google")} variant="outline">
+      <Button onClick={() => socialSignIn("google")} variant="outline">
         Signin with Google
       </Button>
-      <Button onClick={() => signIn("kakao")} variant="outline">
+      <Button onClick={() => socialSignIn("kakao")} variant="outline">
         Signin with Kakao
       </Button>
       {/* <Button onClick={() => signIn("naver")} variant="outline">
