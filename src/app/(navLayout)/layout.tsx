@@ -1,6 +1,7 @@
 "use client";
 import Footer from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
+import useInput from "@/hooks/useInput";
 import useWindowSize from "@/hooks/useWindowSize";
 import apiCall from "@/lib/apiCall";
 import { motion } from "framer-motion";
@@ -20,13 +21,25 @@ export default function NavLayout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [images, setImages] = useState<File[]>([]);
-
+  const contentInput = useInput({
+    initialValue: "",
+    onChange: (e) => {
+      e.target.style.height = "auto";
+      e.target.style.height = e.target.scrollHeight + "px";
+    },
+  });
+  const topicInput = useInput({
+    initialValue: "",
+  });
   const onClickHandler = () => {
     setIsOpen(true);
   };
 
   const onSaveHandler = async () => {
     const formData = new FormData();
+
+    formData.append("content", contentInput.value);
+    formData.append("topic", topicInput.value);
     await images.forEach((image) => {
       formData.append("files", image);
     });
@@ -88,17 +101,24 @@ export default function NavLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
             <div className="w-full h-full flex flex-col">
-              <h2 className="text-sm font-bold">hyeseong__</h2>
+              <div className="flex gap-2">
+                <h2 className="text-sm font-bold">hyeseong__</h2>
+                <div className="bg-muted rounded-md flex items-center">
+                  <input
+                    {...topicInput}
+                    name="topic"
+                    className="text-xs focus:border-none font-semibold opacity-70 placeholder:text-center h-3 px-2 w-14 focus:outline-none"
+                    placeholder="topic"
+                  />
+                </div>
+              </div>
               <textarea
-                onChange={(e) => {
-                  e.target.style.height = "auto";
-                  e.target.style.height = e.target.scrollHeight + "px";
-                }}
-                name=""
-                id=""
+                name="content"
+                id="content"
                 className="w-full resize-none pr-10 text-xs/snug focus:outline-none"
                 placeholder="내용을 입력해주세요"
                 rows={1}
+                {...contentInput}
               />
 
               <div className="flex gap-1 py-2 w-full overflow-x-scroll scrollbar-hide">

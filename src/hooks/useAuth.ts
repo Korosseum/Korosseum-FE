@@ -8,9 +8,13 @@ export default function useAuth() {
   useEffect(() => {
     const getSession = async () => {
       setLoading(true);
+      console.log("✨getSession");
       const response = await fetch("/api/auth/signIn?name=user");
       const userData = await response.json();
 
+      console.log("✨response", response);
+      console.log("✨userData", userData);
+      console.log("✨user", user);
       if (userData) {
         setUser(userData);
       } else {

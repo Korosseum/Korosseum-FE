@@ -1,24 +1,25 @@
 import { SessionData, sessionOptions } from "@/lib/session";
 import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
+  console.log(req.headers);
   const response = await fetch(
     `http://localhost:4000/auth/verifyRefreshToken`,
     {
       headers: req.headers,
     }
   );
-
+  console.log("✨session", headers);
   const data = await response.json();
+  console.log("data", data);
 
   const session = await getIronSession<SessionData>(
     await cookies(),
     sessionOptions
   );
 
-  console.log("data", data);
   if (data.user && data.accessToken) {
     session.user = data.user;
     (await cookies()).set("accessToken", data.accessToken, {
