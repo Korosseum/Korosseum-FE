@@ -1,10 +1,9 @@
 "use client";
 
 import { HomePage } from "@/components/HomePage";
+import useAuth from "@/hooks/useAuth";
 export default function HomePageRoute() {
-  return (
-    <main className="debate-transition">
-      <HomePage />
-    </main>
-  );
+  const { loading } = useAuth();
+
+  return <main className="debate-transition">{!loading && <HomePage />}</main>;
 }

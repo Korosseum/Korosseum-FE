@@ -1,9 +1,12 @@
 import { SessionData } from "@/lib/session";
 import { useEffect, useState } from "react";
+import userStore from "@/stores/auth";
 
 export default function useAuth() {
-  const [user, setUser] = useState<SessionData["user"] | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [user, setUser] = useState<SessionData["user"] | null>(null);
+  // const [loading, setLoading] = useState(true);
+
+  const { user, setUser, loading, setLoading, logOut } = userStore();
 
   useEffect(() => {
     const getSession = async () => {
@@ -30,15 +33,15 @@ export default function useAuth() {
     getSession();
   }, []);
 
-  const logOut = async () => {
+  const handleLogOut = async () => {
     const response = await fetch("/api/auth/signOut");
 
-    console.log("response", response);
-
     if (response.ok) {
-      setUser(null);
+      logOut();
+
+      // 로그아웃 후 페이지 새로고침
     }
   };
 
-  return { user, loading, logOut };
+  return { user, loading, logOut: handleLogOut };
 }

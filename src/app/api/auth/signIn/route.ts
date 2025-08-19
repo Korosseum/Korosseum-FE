@@ -4,7 +4,6 @@ import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
-  console.log(req.headers);
   const response = await fetch(
     `http://localhost:4000/auth/verifyRefreshToken`,
     {

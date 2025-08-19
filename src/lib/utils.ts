@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import moment from "moment";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -16,4 +17,18 @@ export const getBgColor = (index: number) => {
     "bg-side-7",
   ];
   return colors[index];
+};
+
+export const getTimeAgo = (date: string) => {
+  const now = moment();
+  const then = moment(date);
+  const diff = now.diff(then, "minutes");
+  console.log(diff);
+  if (diff < 60) {
+    return `${diff} 분 전`;
+  } else if (diff < 1440) {
+    return `${diff} 시간 전`;
+  } else {
+    return `${diff} 일 전`;
+  }
 };

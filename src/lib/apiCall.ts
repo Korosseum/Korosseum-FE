@@ -1,5 +1,3 @@
-import { RequestOptions } from "http";
-
 class ApiCall {
   apiUrl = "http://localhost:4000";
 
@@ -7,7 +5,7 @@ class ApiCall {
     this.apiUrl = apiUrl;
   }
 
-  async get(url: string, options: RequestInit) {
+  async get(url: string, options?: RequestInit) {
     let response = await fetch(this.apiUrl + url, options);
 
     const isValid = await this.authCheck(response);
@@ -15,7 +13,7 @@ class ApiCall {
       await fetch("/api/auth/signIn");
       response = await fetch(this.apiUrl + url, options);
     }
-    return this.responseHandler(response);
+    return await this.responseHandler(response);
   }
 
   async post(
@@ -63,9 +61,11 @@ class ApiCall {
 
   async responseHandler(response: Response) {
     if (!response.ok) {
+      console.log("✨response error");
       return {};
       //   todo: 에러 팝업
     }
+
     return response.json();
   }
 }
