@@ -20,18 +20,27 @@ class ApiCall {
     url: string,
     { body, headers }: { body?: Record<string, any>; headers?: any }
   ) {
-    const defaultOptions = {
+    let defaultOptions: RequestInit = {
       credentials: "include" as const,
       body: JSON.stringify(body),
     };
+
+    // JSON 체크 후 헤더에 content-type 추가
+    const isFormData = body instanceof FormData;
+    const isBlob = body instanceof Blob;
+    const isFile = body instanceof File;
+    const isSearchParams = body instanceof URLSearchParams;
+    const isJson = !(isFormData || isBlob || isFile || isSearchParams);
+    if (isJson) {
+      defaultOptions.headers = {
+        "Content-Type": "application/json",
+      };
+    }
 
     // 사용자 옵션과 기본 옵션 병합
     const mergedOptions = {
       ...defaultOptions,
     };
-
-    // 폼데이터 체크 폼 데이터일 경우 stringify 하지 않음
-    const isFormData = body instanceof FormData;
 
     let response = await fetch(this.apiUrl + url, {
       ...mergedOptions,

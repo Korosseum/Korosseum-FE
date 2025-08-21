@@ -3,23 +3,21 @@ import useInput from "@/hooks/useInput";
 import useWindowSize from "@/hooks/useWindowSize";
 import apiCall from "@/lib/apiCall";
 import { motion } from "framer-motion";
-import {
-  ImageIcon,
-  ListCheck,
-  SmileIcon,
-  VideoIcon,
-  XIcon,
-} from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import SignIn from "../SignIn";
+import * as uuid from "uuid";
 
-interface User {
-  nickname: string;
-  nicknameIndex: number;
-  photo: string;
-  email: string;
-  provider: string;
+import imageCompressor from "browser-image-compression";
+
+interface Image {
+  id: string;
+  originalFile: File;
+  status: "compressing" | "compressed" | "error";
+  compressedFile: File | null;
+  preview: string;
+  presignedUrl: string | null;
 }
 
 export default function NewPost({
@@ -29,9 +27,9 @@ export default function NewPost({
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }) {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const windowSize = useWindowSize();
 
   const contentInput = useInput({
@@ -62,21 +60,114 @@ export default function NewPost({
     );
   }
 
-  const onSaveHandler = async () => {
-    const formData = new FormData();
-
-    formData.append("content", contentInput.value);
-    formData.append("topic", topicInput.value);
-    await images.forEach((image) => {
-      formData.append("files", image);
+  const imageCompress = async (image: File) => {
+    const compressedImage = await imageCompressor(image, {
+      maxSizeMB: 1,
+      useWebWorker: true,
+      maxWidthOrHeight: 1920,
     });
-
-    const response = await apiCall.post("/post", {
-      body: formData,
-    });
-
-    console.log(response);
+    return compressedImage;
   };
+
+  const onSaveHandler = async () => {
+    // image 검증 및 presigned url 요청용 정보 body
+    const body = await Promise.all(
+      images.map((image) => {
+        return {
+          type: image.originalFile.type,
+          name: image.originalFile.name,
+          size: image.originalFile.size,
+          id: image.id,
+        };
+      })
+    );
+    console.log(body);
+
+    //response =  {data: {presignedUrls: {}}};
+
+    const presignedResult = await apiCall.post("/s3/presigned-url", {
+      body: {
+        files: body,
+        type: "image",
+        folder: "images/post",
+      },
+    });
+
+    const { presignedUrls } = presignedResult.data;
+    console.log("presignedUrls", presignedUrls);
+
+    const uploadPromises = images.map(async (image) => {
+      const url = presignedUrls[image.id];
+
+      console.log("url", url);
+
+      if (!url) {
+        throw new Error(
+          `${image.originalFile.name} 에 해당하는 업로드 url 정보가 없습니다.`
+        );
+      }
+
+      const fileState = image.compressedFile;
+
+      const uploadPromise = await fetch(url, {
+        method: "PUT",
+        body: fileState,
+        headers: {
+          "Content-Type": image.originalFile.type,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          console.log(`${image.originalFile.name} 업로드 성공`);
+        } else {
+          console.log(`${image.originalFile.name} 업로드 실패`);
+        }
+      });
+
+      return uploadPromise;
+    });
+
+    const uploadResults = await Promise.allSettled(uploadPromises);
+    console.log("uploadResults", uploadResults);
+  };
+
+  const onChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+
+    if (files?.length == 0) return;
+
+    const initialImages = files.map((file) => {
+      return {
+        id: uuid.v4(),
+        originalFile: file,
+        status: "compressing" as const,
+        compressedFile: null,
+        preview: URL.createObjectURL(file),
+        presignedUrl: null,
+      };
+    });
+    setImages(initialImages);
+
+    const compressionPromises = initialImages.map(async (image) => {
+      try {
+        const compressedImage = await imageCompress(image.originalFile);
+        return {
+          ...image,
+          status: "compressed" as const,
+          compressedFile: compressedImage,
+        };
+      } catch (error) {
+        return {
+          ...image,
+          status: "error" as const,
+        };
+      }
+    });
+
+    const settledImages = await Promise.all(compressionPromises);
+    setImages(settledImages);
+  };
+
+  const allCompressed = images.every((image) => image.status === "compressed");
 
   return (
     isOpen && (
@@ -144,11 +235,11 @@ export default function NewPost({
             <div className="flex gap-1 py-2 w-full overflow-x-scroll scrollbar-hide">
               {images.map((image) => (
                 <Image
-                  src={URL.createObjectURL(image)}
+                  src={image.preview}
                   alt="postImage"
                   layout="raw"
                   className="object-cover"
-                  key={image.name}
+                  key={image.originalFile.name}
                   width={100}
                   height={100}
                 />
@@ -167,9 +258,7 @@ export default function NewPost({
                   className="hidden"
                   multiple
                   accept="image/*"
-                  onChange={(e) => {
-                    setImages(Array.from(e.target.files || []));
-                  }}
+                  onChange={onChangeHandler}
                 />
               </div>
               {/* <button className="hover:bg-muted ">

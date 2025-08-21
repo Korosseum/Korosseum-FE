@@ -27,8 +27,10 @@ export const getTimeAgo = (date: string) => {
   if (diff < 60) {
     return `${diff} 분 전`;
   } else if (diff < 1440) {
-    return `${diff} 시간 전`;
+    const hours = Math.floor(diff / 60);
+    return `${hours} 시간 전`;
   } else {
-    return `${diff} 일 전`;
+    const days = Math.floor(diff / 1440);
+    return `${days} 일 전`;
   }
 };
