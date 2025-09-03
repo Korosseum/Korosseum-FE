@@ -5,12 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
   const searchParams = req.nextUrl.searchParams;
+  const id = searchParams.get("id");
   const email = searchParams.get("email");
   const nickname = searchParams.get("nickname");
   const provider = searchParams.get("provider");
   const photo = searchParams.get("photo");
 
   const user = {
+    id,
     email,
     nickname,
     provider,
@@ -22,12 +24,13 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     await cookies(),
     sessionOptions
   );
-  if (provider && email && nickname && photo) {
+  if (id && provider && email && nickname && photo) {
     session.user = {
-      provider: provider,
-      email: email,
-      nickname: nickname,
-      photo: photo,
+      id,
+      provider,
+      email,
+      nickname,
+      photo,
     };
   }
 

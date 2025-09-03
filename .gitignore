@@ -34,6 +34,18 @@ yarn-error.log*
 .env*
 google_client_secret.json
 
+
+# SSL
+*.pem
+*.key
+*.crt
+*.csr
+*.pem
+*.key
+*.crt
+*.csr
+
+
 # vercel
 .vercel
 
@@ -41,3 +53,5 @@ google_client_secret.json
 *.tsbuildinfo
 next-env.d.ts
 GEMINI.md
+
+certificates

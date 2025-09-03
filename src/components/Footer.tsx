@@ -1,7 +1,7 @@
 import { Bell, Home, PlusCircle, Search, User } from "lucide-react";
 import Link from "next/link";
 
-const Footer = () => {
+const Footer = ({ onClickHandler }: { onClickHandler: () => void }) => {
   return (
     <>
       <Link href="/" className="w-full h-full flex justify-center items-center">
@@ -11,7 +11,10 @@ const Footer = () => {
       <Link href="/" className="w-full h-full flex justify-center items-center">
         <Search />
       </Link>
-      <button className="w-full h-full flex justify-center items-center">
+      <button
+        onClick={onClickHandler}
+        className="w-full h-full flex justify-center items-center"
+      >
         <div className="bg-muted rounded-xl p-2">
           <PlusCircle />
         </div>

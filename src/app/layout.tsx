@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${notoSans.variable} `}>
       <head></head>
-      <body className={`antialiased rounded h-full`}>{children}</body>
+      <body className={`antialiased rounded h-screen`}>{children}</body>
     </html>
   );
 }

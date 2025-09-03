@@ -13,12 +13,7 @@ export function Navigation() {
   const pathname = usePathname().split("/")[1];
 
   const { user, loading, logOut } = useAuth();
-
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("session", user);
-  }, [user]);
 
   return (
     <div className="container mx-auto px-4 py-2">
@@ -61,7 +56,7 @@ export function Navigation() {
               <Button
                 onClick={() => logOut()}
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex h-7 items-center gap-2"
               >
                 로그아웃
               </Button>

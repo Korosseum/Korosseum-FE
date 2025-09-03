@@ -1,12 +1,20 @@
 class ApiCall {
-  apiUrl = "http://localhost:4000";
+  apiUrl = "/back-end";
 
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
   }
 
   async get(url: string, options?: RequestInit) {
-    let response = await fetch(this.apiUrl + url, options);
+    const defaultOptions: RequestInit = {
+      credentials: "include" as const,
+    };
+
+    const mergedOptions = {
+      ...defaultOptions,
+      ...options,
+    };
+    let response = await fetch(this.apiUrl + url, mergedOptions);
 
     const isValid = await this.authCheck(response);
     if (!isValid) {
@@ -24,6 +32,9 @@ class ApiCall {
       credentials: "include" as const,
       body: JSON.stringify(body),
     };
+    if (headers) {
+      defaultOptions.headers = headers;
+    }
 
     // JSON 체크 후 헤더에 content-type 추가
     const isFormData = body instanceof FormData;
@@ -33,6 +44,7 @@ class ApiCall {
     const isJson = !(isFormData || isBlob || isFile || isSearchParams);
     if (isJson) {
       defaultOptions.headers = {
+        ...defaultOptions.headers,
         "Content-Type": "application/json",
       };
     }
@@ -47,6 +59,8 @@ class ApiCall {
       method: "POST",
       body: isFormData ? body : JSON.stringify(body),
     });
+
+    console.log("✨response", response);
 
     const isValid = await this.authCheck(response);
     if (!isValid) {
@@ -79,6 +93,8 @@ class ApiCall {
   }
 }
 
-const apiCall = new ApiCall(process.env.API_URL || "http://localhost:4000");
+const apiCall = new ApiCall(
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
+);
 
 export default apiCall;

@@ -14,6 +14,7 @@ export const sessionOptions: SessionOptions = {
 
 export interface SessionData {
   user: {
+    id: string;
     provider: string;
     email: string;
     nickname: string;
@@ -23,6 +24,7 @@ export interface SessionData {
 
 export const defaultSession: SessionData = {
   user: {
+    id: "",
     provider: "",
     email: "",
     nickname: "",

@@ -1,18 +1,13 @@
+import apiCall from "@/lib/apiCall";
 import { SessionData, sessionOptions } from "@/lib/session";
 import { getIronSession } from "iron-session";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
-  const response = await fetch(
-    `http://localhost:4000/auth/verifyRefreshToken`,
-    {
-      headers: req.headers,
-    }
-  );
-  console.log("✨session", headers);
-  const data = await response.json();
-  console.log("data", data);
+  const data = await apiCall.get("/auth/verifyRefreshToken", {
+    headers: req.headers,
+  });
 
   const session = await getIronSession<SessionData>(
     await cookies(),
@@ -29,6 +24,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     });
 
     session.user = {
+      id: data.user.id,
       provider: data.user.provider,
       email: data.user.email,
       nickname: data.user.nickname,

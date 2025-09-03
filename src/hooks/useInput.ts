@@ -21,7 +21,7 @@ const useInput = ({
     externalOnChange?.(e);
   };
 
-  return { value, onChange };
+  return { attributes: { value, onChange }, setValue };
 };
 
 export default useInput;

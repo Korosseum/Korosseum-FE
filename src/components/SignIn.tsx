@@ -11,7 +11,10 @@ export default function SignIn() {
   };
 
   const socialSignIn = (provider: string) => {
-    window.open(`http://localhost:4000/auth/${provider}`, "_blank");
+    window.open(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}`,
+      "_blank"
+    );
   };
 
   return (
